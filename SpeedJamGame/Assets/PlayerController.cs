@@ -30,6 +30,8 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Start()
     {
+        Application.targetFrameRate = 60;
+        
         _rb = GetComponent<Rigidbody2D>();
         _canSwing = true;
         _isGrounded = true;
@@ -102,18 +104,14 @@ public class PlayerController : Singleton<PlayerController>
         var onRadius = toAnchor.normalized * radius;
         var tangent = new Vector2(onRadius.y, -onRadius.x).normalized;
         _rb.velocity = tangent * initialSwingSpeed;
-        if (transform.position.x >= targetSwingObject.transform.position.x)
-            swingSpeedLoss = Mathf.Abs(swingSpeedLoss);
-        else 
-            swingSpeedLoss = -Mathf.Abs(swingSpeedLoss);
-        if (transform.position.y <= swingHeightDecel)
+        if (transform.position.y <= swingHeightDecel) // Below Line
         {
-            if (transform.position.x >= targetSwingObject.transform.position.x)
+            if (transform.position.x >= targetSwingObject.transform.position.x) // Right Side and Below Line
                 initialSwingSpeed += swingSpeedGain / 100 * Mathf.Abs(_speed);
             else
                 initialSwingSpeed -= swingSpeedLoss / 100 * Mathf.Abs(_speed);
         }
-        else
+        else // Above Line
             initialSwingSpeed -= swingSpeedLoss / 100 * Mathf.Abs(_speed);
 
         swingLine.enabled = true;

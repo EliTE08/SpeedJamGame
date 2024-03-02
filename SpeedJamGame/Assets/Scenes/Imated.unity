@@ -1094,8 +1094,8 @@ MonoBehaviour:
   targetSwingObject: {fileID: 1289435252}
   radius: 6
   initialSwingSpeed: 5
-  swingSpeedGain: 0.04
-  swingSpeedLoss: 0.25
+  swingSpeedGain: 0.004
+  swingSpeedLoss: 2.5
   swingHeightDecel: 0
   swingLine: {fileID: 523628171}
 --- !u!212 &2126148646
