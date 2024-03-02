@@ -654,7 +654,7 @@ GameObject:
   - component: {fileID: 2126148643}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -743,13 +743,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2881f0ff3dcd64439f7d3d560edcabf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   moveSpeed: 5
+  accelTime: 0
+  decelTime: 0
   jumpForce: 3
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  canSwing: 0
-  isGrounded: 0
+  targetSwingObject: {fileID: 0}
+  radius: 0
+  initialSwingSpeed: 5
+  swingSpeedGain: 5
+  swingSpeedLoss: 2.5
+  swingHeightDecel: 0
+  swingLine: {fileID: 0}
 --- !u!212 &2126148646
 SpriteRenderer:
   m_ObjectHideFlags: 0

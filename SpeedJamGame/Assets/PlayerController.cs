@@ -20,6 +20,7 @@ public class PlayerController : Singleton<PlayerController>
     private Rigidbody2D _rb;
     private SpriteRenderer _spriteRenderer;
     private Vector2 _target;
+    private Vector2 respawnPoint;
     private float _vert;
     private float _horiz;
     private bool _canSwing;
@@ -137,5 +138,15 @@ public class PlayerController : Singleton<PlayerController>
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(new Vector3(-999f, targetSwingObject.transform.position.y), new Vector3(999f, swingHeightDecel));
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision){
+        if(collision.CompareTag("Checkpoint")){
+            respawnPoint = collision.transform.position;
+        }
+    }
+
+    public void Respawn(){
+        transform.position = respawnPoint;
     }
 }
