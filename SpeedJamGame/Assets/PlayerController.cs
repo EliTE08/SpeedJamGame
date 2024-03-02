@@ -3,12 +3,10 @@ using UnityEngine;
 
 public class PlayerController : Singleton<PlayerController>
 {
-    [SerializeField] private float tieredAcceleration;
-    [SerializeField] private float floorspeed;
+    [SerializeField] private float moveSpeed;
     [SerializeField] private float accelTime;
     [SerializeField] private float decelTime;
     [SerializeField] private float jumpForce;
-    [SerializeField] private float floorJumpForce;
     [SerializeField] private LayerMask groundLayer;
     
     [SerializeField] private GameObject targetSwingObject;
@@ -38,75 +36,68 @@ public class PlayerController : Singleton<PlayerController>
         _rb = GetComponent<Rigidbody2D>();
         _canSwing = true;
         _isGrounded = true;
-        _target = targetSwingObject == null? Vector2.zero: targetSwingObject.transform.position;
-        _speed = tieredAcceleration;
+        _target = targetSwingObject.transform.position;
+        _speed = moveSpeed;
     }
 
     private void Update()
     {
         _isGrounded = _rb.IsTouchingLayers(groundLayer);
         _canSwing = InRange(_target);
-        //_rb.gravityScale = _isSwinging ? 0f : 1f;
-        if (!_isSwinging)
-        {
-            MovePlayer();
-            JumpPlayer();
-        }
-        SwingController();
-    }
-    
-    private void Jump()
-    {
-        _isGrounded = false;
-        //_rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
-        _rb.AddForce(new Vector2(0, jumpForce * tieredAcceleration + floorJumpForce), ForceMode2D.Impulse);
-    }
-    private void JumpPlayer()
-    {
-        _vert = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) ? 1:0;
-        if (_vert > 0 && _isGrounded)
-            Jump();
-    }
-    private void MovePlayer()
-    {
-        _horiz = Input.GetAxis("Horizontal");
-        if(_horiz != 0)
-            transform.localScale = new Vector3(_horiz > 0 ? 1 : -1, 1, 1);
-        if (_horiz != 0)
-            Accelerate(_horiz/*, tieredAcceleration*/);
-        if(_horiz == 0 && !_isSwinging && _isGrounded)
-            Decelerate();
-    }
-    
-    private void Accelerate(float direction/*, float maxSpeed*/)
-    {
-        //var acceleration = (direction * maxSpeed - _rb.velocity.x) / accelTime;
-        _rb.AddForce(new Vector2((direction * tieredAcceleration),0), ForceMode2D.Impulse);
-        transform.Translate(new Vector2(direction,0) * floorspeed * Time.deltaTime);
-    }
+        _rb.gravityScale = _isSwinging ? 0f : 1f;
 
-    private void Decelerate()
-    {
-        var deceleration = (0 - _rb.velocity.x) / decelTime;
-        //_rb.AddForce(new Vector2(deceleration, 0), ForceMode2D.Impulse);
-    }
-
-    private void SwingController()
-    {
+        MovePlayer();
         if (Input.GetButton("Jump") && _canSwing)
         {
             if (!_isSwinging)
             {
-                if (transform.position.x <= targetSwingObject.transform.position.x)
+                if(transform.position.x <= targetSwingObject.transform.position.x)
                     Swing();
             }
             else
                 Swing();
         }
 
-        else if (Input.GetButtonUp("Jump"))
+        if(Input.GetButtonUp("Jump"))
             StopSwing();
     }
+
+    private void Jump()
+    {
+        _isGrounded = false;
+        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+    }
+    
+    private void MovePlayer()
+    {
+        if(_isSwinging)
+            return;
+        _horiz = Input.GetAxis("Horizontal");
+        _vert = Input.GetAxis("Vertical"); 
+
+
+        if(_vert > 0 && _isGrounded)
+            Jump();
+        if(_horiz != 0)
+            transform.localScale = new Vector3(_horiz > 0 ? 1 : -1, 1, 1);
+        if(_horiz != 0)
+            Accelerate(_horiz, moveSpeed);
+        if(_horiz == 0 && !_isSwinging && _isGrounded)
+            Decelerate();
+    }
+    
+    private void Accelerate(float direction, float maxSpeed)
+    {
+        var acceleration = (direction * maxSpeed - _rb.velocity.x) / accelTime;
+        _rb.velocity += new Vector2(acceleration * Time.deltaTime * 100, 0f);
+    }
+
+    private void Decelerate()
+    {
+        var deceleration = (0 - _rb.velocity.x) / decelTime;
+        _rb.velocity += new Vector2(deceleration * Time.deltaTime * 100, 0f);
+    }
+
     private void Swing()
     {
         _isSwinging = true;
