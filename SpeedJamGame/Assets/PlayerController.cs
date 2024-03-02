@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class PlayerController : Singleton<PlayerController>
@@ -9,18 +11,17 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private float jumpForce;
     [SerializeField] private LayerMask groundLayer;
     
-    [SerializeField] private GameObject targetSwingObject;
+    [SerializeField] private List<GameObject> targetSwingObjects;
     [SerializeField] private float radius;
     [SerializeField] private float initialSwingSpeed = 5;
-    [SerializeField] private float swingSpeedGain = 5f;
-    [SerializeField] private float swingSpeedLoss = 2.5f;
+    [SerializeField] private float swingSpeedAccel = 2.5f;
+    [SerializeField] private float swingSpeedDecel = 2.5f;
     [SerializeField] private float swingHeightDecel;
     [SerializeField] private LineRenderer swingLine;
 
     private Rigidbody2D _rb;
     private SpriteRenderer _spriteRenderer;
-    private Vector2 _target;
-    private Vector2 respawnPoint;
+    private Vector2 _respawnPoint;
     private float _vert;
     private float _horiz;
     private bool _canSwing;
@@ -28,6 +29,7 @@ public class PlayerController : Singleton<PlayerController>
     private Vector3 _playerToAnchor;
     private float _speed;
     private bool _isSwinging;
+    private int _currentlyActiveSwingPoint;
 
     private void Start()
     {
@@ -36,26 +38,35 @@ public class PlayerController : Singleton<PlayerController>
         _rb = GetComponent<Rigidbody2D>();
         _canSwing = true;
         _isGrounded = true;
-        _target = targetSwingObject.transform.position;
         _speed = moveSpeed;
     }
 
     private void Update()
     {
         _isGrounded = _rb.IsTouchingLayers(groundLayer);
-        _canSwing = InRange(_target);
+        _canSwing = InRange(targetSwingObjects[_currentlyActiveSwingPoint].transform.position);
         _rb.gravityScale = _isSwinging ? 0f : 1f;
 
         MovePlayer();
+
         if (Input.GetButton("Jump") && _canSwing)
         {
             if (!_isSwinging)
             {
-                if(transform.position.x <= targetSwingObject.transform.position.x)
+                if(transform.position.x <= targetSwingObjects[_currentlyActiveSwingPoint].transform.position.x)
                     Swing();
             }
             else
                 Swing();
+        }
+
+        for (int i = 0; i < targetSwingObjects.Count; i++)
+        {
+            if (Vector2.Distance(targetSwingObjects[i].transform.position, transform.position) <= 20f)
+            {
+                _currentlyActiveSwingPoint = i;
+                break;
+            }
         }
 
         if(Input.GetButtonUp("Jump"))
@@ -101,27 +112,17 @@ public class PlayerController : Singleton<PlayerController>
     private void Swing()
     {
         _isSwinging = true;
-        var toAnchor = (Vector2)targetSwingObject.transform.position - _rb.position;
+        var toAnchor = (Vector2)targetSwingObjects[_currentlyActiveSwingPoint].transform.position - _rb.position;
         var onRadius = toAnchor.normalized * radius;
         var tangent = new Vector2(onRadius.y, -onRadius.x).normalized;
-        _rb.velocity = tangent * initialSwingSpeed;
-        if (transform.position.x >= targetSwingObject.transform.position.x)
-            swingSpeedLoss = Mathf.Abs(swingSpeedLoss);
-        else 
-            swingSpeedLoss = -Mathf.Abs(swingSpeedLoss);
-        if (transform.position.y <= swingHeightDecel) // Below Line
-        {
-            if (transform.position.x >= targetSwingObject.transform.position.x) // Right Side and Below Line
-                initialSwingSpeed += swingSpeedGain / 100 * Mathf.Abs(_speed);
-            else
-                initialSwingSpeed -= swingSpeedLoss / 100 * Mathf.Abs(_speed);
-        }
-        else // Above Line
-            initialSwingSpeed -= swingSpeedLoss / 100 * Mathf.Abs(_speed);
-
+        _rb.velocity = tangent * (initialSwingSpeed + 0.1f);
+        if(transform.position.x <= targetSwingObjects[_currentlyActiveSwingPoint].transform.position.x) // Left
+            initialSwingSpeed += swingSpeedDecel / 100 * Mathf.Abs(_speed);
+        else
+            initialSwingSpeed -= swingSpeedDecel / 100 * Mathf.Abs(_speed);
         swingLine.enabled = true;
         swingLine.SetPosition(0, transform.position);
-        swingLine.SetPosition(1, targetSwingObject.transform.position);
+        swingLine.SetPosition(1, targetSwingObjects[_currentlyActiveSwingPoint].transform.position);
     }
     
     private void StopSwing()
@@ -132,21 +133,22 @@ public class PlayerController : Singleton<PlayerController>
     
     private bool InRange(Vector2 target)
     {
-        return radius >= Vector2.Distance(transform.position, target);
+        return radius >= Vector2.Distance(transform.position, target) || _isSwinging;
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawLine(new Vector3(-999f, targetSwingObject.transform.position.y), new Vector3(999f, swingHeightDecel));
+        Gizmos.DrawLine(new Vector3(-999f, targetSwingObjects[_currentlyActiveSwingPoint].transform.position.y), new Vector3(999f, swingHeightDecel));
     }
 
-    private void OnTriggerEnter2D(Collider2D collision){
-        if(collision.CompareTag("Checkpoint")){
-            respawnPoint = collision.transform.position;
-        }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Checkpoint"))
+            _respawnPoint = collision.transform.position;
     }
 
-    public void Respawn(){
-        transform.position = respawnPoint;
+    public void Respawn()
+    {
+        transform.position = _respawnPoint;
     }
 }
