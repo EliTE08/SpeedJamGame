@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 
 public class PlayerController : Singleton<PlayerController>
@@ -10,17 +8,19 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private float decelTime;
     [SerializeField] private float jumpForce;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private PhysicsMaterial2D icePhysics;
+    [SerializeField] private PhysicsMaterial2D normalPhysics;
     
     [SerializeField] private List<GameObject> targetSwingObjects;
     [SerializeField] private float radius;
     [SerializeField] private float initialSwingSpeed = 5;
-    [SerializeField] private float swingSpeedAccel = 2.5f;
     [SerializeField] private float swingSpeedDecel = 2.5f;
     [SerializeField] private float swingHeightDecel;
     [SerializeField] private LineRenderer swingLine;
 
     private Rigidbody2D _rb;
     private SpriteRenderer _spriteRenderer;
+    private Collider2D _collider;
     private Vector2 _respawnPoint;
     private float _vert;
     private float _horiz;
@@ -36,6 +36,7 @@ public class PlayerController : Singleton<PlayerController>
         Application.targetFrameRate = 60;
         
         _rb = GetComponent<Rigidbody2D>();
+        _collider = GetComponent<Collider2D>();
         _canSwing = true;
         _isGrounded = true;
         _speed = moveSpeed;
@@ -71,6 +72,22 @@ public class PlayerController : Singleton<PlayerController>
 
         if(Input.GetButtonUp("Jump"))
             StopSwing();
+        if (Input.GetKey(KeyCode.LeftShift))
+            Slide();
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+            StopSlide();
+    }
+
+    private void Slide()
+    {
+        _collider.sharedMaterial = icePhysics;
+        _rb.sharedMaterial = icePhysics;
+    }
+    
+    private void StopSlide()
+    {
+        _collider.sharedMaterial = normalPhysics;
+        _rb.sharedMaterial = normalPhysics;
     }
 
     private void Jump()

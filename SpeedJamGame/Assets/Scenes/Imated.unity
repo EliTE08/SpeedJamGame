@@ -2084,12 +2084,13 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  icePhysics: {fileID: 6200000, guid: b147b3e069a9df94d82971b6384fa616, type: 2}
+  normalPhysics: {fileID: 6200000, guid: a3f77e59249c88747b1deec79d0045ef, type: 2}
   targetSwingObjects:
   - {fileID: 1289435252}
   - {fileID: 2131291006}
   radius: 6
   initialSwingSpeed: 5
-  swingSpeedAccel: 2
   swingSpeedDecel: 1
   swingHeightDecel: -0.5
   swingLine: {fileID: 523628171}
