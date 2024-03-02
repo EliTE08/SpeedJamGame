@@ -108,10 +108,10 @@ public class PlayerController : Singleton<PlayerController>
         if(_isSwinging)
             return;
         _horiz = Input.GetAxis("Horizontal");
-        _vert = Input.GetAxis("Vertical");
-
-        if(_vert > 0 && _isGrounded)
+        _vert = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) ? 1 : 0;
+        if (_vert > 0 && _isGrounded)
             Jump();
+        
         if (_horiz != 0)
         {
             transform.localScale = new Vector3(_horiz > 0 ? 1 : -1, 1, 1);
