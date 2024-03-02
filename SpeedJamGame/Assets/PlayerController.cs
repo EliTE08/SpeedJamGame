@@ -5,7 +5,7 @@ public class PlayerController : Singleton<PlayerController>
 {
     [SerializeField] private List<float> accelerationValues = new List<float>();
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float accelTime;
+    [SerializeField] private float sizeMomentum;
     [SerializeField] private float jumpForce;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private PhysicsMaterial2D icePhysics;
@@ -53,6 +53,9 @@ public class PlayerController : Singleton<PlayerController>
 
         MovePlayer();
 
+        if (Input.GetButtonDown("Jump") && _canSwing)
+            StartSwing();
+        
         if (Input.GetButton("Jump") && _canSwing)
         {
             if (!_isSwinging)
@@ -118,14 +121,15 @@ public class PlayerController : Singleton<PlayerController>
     
     private void Accelerate(float direction, float maxSpeed)
     {
-        var acceleration = (direction * maxSpeed - _rb.velocity.x) / accelTime;
-        _rb.velocity += new Vector2(acceleration * Time.deltaTime, 0f);
+        var acceleration = (direction * maxSpeed - _rb.velocity.x) / sizeMomentum;
+        _rb.velocity += new Vector2(acceleration * Time.deltaTime * 100, 0f);
         _rb.AddForce(new Vector2(direction * _tierAcceleration,0), ForceMode2D.Impulse);
     }
 
     private void StartSwing()
     {
-        initialSwingSpeed = 
+        initialSwingSpeed = swingPercentage / 100 * _rb.velocity.x;
+        swingSpeedDecel = initialSwingSpeed / 5f;
     }
     
     private void Swing()
