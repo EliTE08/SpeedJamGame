@@ -104,6 +104,10 @@ public class PlayerController : Singleton<PlayerController>
         var onRadius = toAnchor.normalized * radius;
         var tangent = new Vector2(onRadius.y, -onRadius.x).normalized;
         _rb.velocity = tangent * initialSwingSpeed;
+        if (transform.position.x >= targetSwingObject.transform.position.x)
+            swingSpeedLoss = Mathf.Abs(swingSpeedLoss);
+        else 
+            swingSpeedLoss = -Mathf.Abs(swingSpeedLoss);
         if (transform.position.y <= swingHeightDecel) // Below Line
         {
             if (transform.position.x >= targetSwingObject.transform.position.x) // Right Side and Below Line
