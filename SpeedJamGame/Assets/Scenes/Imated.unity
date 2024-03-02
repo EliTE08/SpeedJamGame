@@ -465,7 +465,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 523628169}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -719,7 +719,7 @@ Transform:
   m_GameObject: {fileID: 1289435252}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.01, y: 2.71, z: 0}
+  m_LocalPosition: {x: -0.967, y: 2.71, z: 0}
   m_LocalScale: {x: 1.2365576, y: 1.2920619, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1083,7 +1083,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2881f0ff3dcd64439f7d3d560edcabf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   moveSpeed: 5
+  accelTime: 25
+  decelTime: 1000
   jumpForce: 5
   groundLayer:
     serializedVersion: 2
@@ -1091,9 +1094,9 @@ MonoBehaviour:
   targetSwingObject: {fileID: 1289435252}
   radius: 6
   initialSwingSpeed: 5
-  minSwingSpeed: -5
-  height: 1
-  decelFactor: 1
+  swingSpeedGain: 0.04
+  swingSpeedLoss: 0.25
+  swingHeightDecel: 0
   swingLine: {fileID: 523628171}
 --- !u!212 &2126148646
 SpriteRenderer:
