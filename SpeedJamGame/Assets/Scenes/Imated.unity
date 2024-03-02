@@ -2090,8 +2090,8 @@ MonoBehaviour:
   - {fileID: 1289435252}
   - {fileID: 2131291006}
   radius: 6
-  initialSwingSpeed: 5
-  swingSpeedDecel: 1
+  initialSwingSpeed: 7.5
+  swingSpeedDecel: 1.5
   swingHeightDecel: -0.5
   swingLine: {fileID: 523628171}
 --- !u!212 &2126148646
