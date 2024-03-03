@@ -42,7 +42,7 @@ public class TrailChange : MonoBehaviour
       
     private void UpdateTrailColorAndWidth()
     {
-        trailRenderer.material.color = tierColor[currentTier];
-        trailRenderer.widthMultiplier = trailWidth[currentTier];
+        //trailRenderer.material.color = tierColor[currentTier];
+        //trailRenderer.widthMultiplier = trailWidth[currentTier];
     }
 }

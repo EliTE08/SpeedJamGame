@@ -134,8 +134,8 @@ public class PlayerController : Singleton<PlayerController>
     private void Jump()
     {
         _isGrounded = false;
-        _rb.velocity = new Vector2(_rb.velocity.x, moveSpeed);
-        _rb.AddForce(new Vector2(0, moveSpeed * _tierAcceleration + 2f), ForceMode2D.Impulse);
+        //_rb.velocity = new Vector2(_rb.velocity.x, _rb.velocity.x);
+        _rb.AddForce(new Vector2(0, jumpForce * _rb.velocity.x), ForceMode2D.Impulse);
         transform.DOScale(jumpScale, jumpDuration).OnComplete(() =>
         {
             transform.DOScale(Vector3.one, jumpDuration);
@@ -162,7 +162,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         var acceleration = (direction * maxSpeed - _rb.velocity.x) / sizeMomentum;
         _rb.velocity += new Vector2(acceleration * Time.deltaTime * 100, 0f);
-        _rb.AddForce(new Vector2(direction * _tierAcceleration,0), ForceMode2D.Impulse);
+        _rb.AddForce(new Vector2(direction * _tierAcceleration + 2,0), ForceMode2D.Impulse);
     }
 
     private void StartSwing()
