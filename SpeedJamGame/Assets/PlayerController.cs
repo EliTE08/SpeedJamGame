@@ -15,9 +15,8 @@ public class PlayerController : Singleton<PlayerController>
     [Header("Swinging")]
     [SerializeField] private List<GameObject> targetSwingObjects;
     [SerializeField] private float radius;
-    [SerializeField] private float initialSwingSpeed = 5;
+    [SerializeField] private float minSwingSpeed = 5;
     [SerializeField] private float swingPercentage = 5;
-    [SerializeField] private float swingSpeedDecel = 2.5f;
     [SerializeField] private float swingHeightDecel;
     [SerializeField] private LineRenderer swingLine;
 
@@ -41,6 +40,8 @@ public class PlayerController : Singleton<PlayerController>
     private bool _isSwinging;
     private int _currentlyActiveSwingPoint;
     private float _tierAcceleration;
+    private float _initialSwingSpeed = 5;
+    private float _swingSpeedDecel = 2.5f;
 
     private void Start()
     {
@@ -150,8 +151,8 @@ public class PlayerController : Singleton<PlayerController>
 
     private void StartSwing()
     {
-        initialSwingSpeed = swingPercentage / 100 * _rb.velocity.x;
-        swingSpeedDecel = initialSwingSpeed / 5f;
+        _initialSwingSpeed = Mathf.Max(minSwingSpeed, swingPercentage / 100 * _rb.velocity.x);
+        _swingSpeedDecel = _initialSwingSpeed / 5f;
     }
     
     private void Swing()
@@ -160,11 +161,11 @@ public class PlayerController : Singleton<PlayerController>
         var toAnchor = (Vector2)targetSwingObjects[_currentlyActiveSwingPoint].transform.position - _rb.position;
         var onRadius = toAnchor.normalized * radius;
         var tangent = new Vector2(onRadius.y, -onRadius.x).normalized;
-        _rb.velocity = tangent * (initialSwingSpeed + 0.1f);
+        _rb.velocity = tangent * (_initialSwingSpeed + 0.1f);
         if(transform.position.x <= targetSwingObjects[_currentlyActiveSwingPoint].transform.position.x) // Left
-            initialSwingSpeed += swingSpeedDecel / 100 * Mathf.Abs(_speed);
+            _initialSwingSpeed += _swingSpeedDecel / 100 * Mathf.Abs(_speed);
         else
-            initialSwingSpeed -= swingSpeedDecel / 100 * Mathf.Abs(_speed);
+            _initialSwingSpeed -= _swingSpeedDecel / 100 * Mathf.Abs(_speed);
         swingLine.enabled = true;
         swingLine.SetPosition(0, transform.position);
         swingLine.SetPosition(1, targetSwingObjects[_currentlyActiveSwingPoint].transform.position);

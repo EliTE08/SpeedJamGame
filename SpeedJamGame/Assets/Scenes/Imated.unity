@@ -2106,11 +2106,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
   accelerationValues:
+  - 1
   - 3.141593
-  - 0
   moveSpeed: 3.141593
   sizeMomentum: 3.141593
-  jumpForce: 1.047198
+  jumpForce: 2
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -2121,9 +2121,8 @@ MonoBehaviour:
   - {fileID: 1289435252}
   - {fileID: 2131291006}
   radius: 6
-  initialSwingSpeed: 7.5
+  minSwingSpeed: 5
   swingPercentage: 115
-  swingSpeedDecel: 1.5
   swingHeightDecel: -0.5
   swingLine: {fileID: 523628171}
   jumpScale: {x: 0.75, y: 1.25, z: 0}
