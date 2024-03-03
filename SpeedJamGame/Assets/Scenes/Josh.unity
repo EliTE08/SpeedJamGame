@@ -1701,6 +1701,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a760cb8ce8e6f4e9c988e2534d4be9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerRigidbody: {fileID: 2126148644}
+  virtualcamera: {fileID: 1532244456}
 --- !u!4 &1692457924
 Transform:
   m_ObjectHideFlags: 0
@@ -2158,17 +2160,21 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  groundDistance: 0.8
   icePhysics: {fileID: 6200000, guid: b147b3e069a9df94d82971b6384fa616, type: 2}
   normalPhysics: {fileID: 6200000, guid: a3f77e59249c88747b1deec79d0045ef, type: 2}
   targetSwingObjects:
   - {fileID: 1289435252}
   - {fileID: 2131291006}
   radius: 6
-  initialSwingSpeed: 7.5
+  minSwingSpeed: 10
   swingPercentage: 115
-  swingSpeedDecel: 1.5
   swingHeightDecel: -0.5
   swingLine: {fileID: 523628171}
+  jumpScale: {x: 0.75, y: 1.25, z: 0}
+  jumpDuration: 0.1
+  landScale: {x: 1.4, y: 0.4, z: 0}
+  landDuration: 0.1
 --- !u!212 &2126148646
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2258,7 +2264,6 @@ TrailRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2307,7 +2312,7 @@ TrailRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.023802042
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2319,7 +2324,7 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.20000002, g: 0.9450981, b: 0.9450981, a: 1}
+      key0: {r: 0, g: 1, b: 1, a: 1}
       key1: {r: 0.18823531, g: 0.23137257, b: 0.29803923, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -2371,6 +2376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c54ffaf7d000f344a714a80218b1e78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trailRenderer: {fileID: 2126148648}
 --- !u!1 &2131291006
 GameObject:
   m_ObjectHideFlags: 0
