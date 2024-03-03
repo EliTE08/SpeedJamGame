@@ -124,7 +124,7 @@ public class PlayerController : Singleton<PlayerController>
             _tierAcceleration = accelerationValues[0];
         }
 
-        if (_bHopping && _horiz == 0 && _rb.velocity.x != 0)
+        if (_bHopping && _rb.velocity.x != 0)
         {
             IncreaseTier();
             print("Tier Increased");
