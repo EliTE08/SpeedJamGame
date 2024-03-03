@@ -7097,6 +7097,7 @@ MonoBehaviour:
   - 10
   - 15
   - 20
+  - 30
   moveSpeed: 7
   sizeMomentum: 1
   jumpForce: 1.5
@@ -7177,7 +7178,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Time: 1
+  m_Time: 0.3141593
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -7195,17 +7196,17 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.40313992
-        value: 0.31494954
-        inSlope: -1.1698047
-        outSlope: -1.1698047
+        time: 0.32336786
+        value: 0.37264186
+        inSlope: -1.0426505
+        outSlope: -1.0426505
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.2080015
-        outWeight: 0.5914787
+        outWeight: 0.30104637
       - serializedVersion: 3
-        time: 1
-        value: 0.023802042
+        time: 0.8005676
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
