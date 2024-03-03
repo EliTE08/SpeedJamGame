@@ -147,6 +147,8 @@ public class PlayerController : Singleton<PlayerController>
     
     private void Accelerate(float direction, float maxSpeed)
     {
+        if(!_isGrounded && _rb.velocity.x >= maxSpeed)
+            return;
         var acceleration = (direction * maxSpeed - _rb.velocity.x) / sizeMomentum;
         _rb.velocity += new Vector2(acceleration * Time.deltaTime * 100, 0f);
         _rb.AddForce(new Vector2(direction * _tierAcceleration,0), ForceMode2D.Impulse);
