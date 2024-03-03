@@ -1672,6 +1672,50 @@ Transform:
   - {fileID: 1916419744}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1692457922
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1692457924}
+  - component: {fileID: 1692457923}
+  m_Layer: 0
+  m_Name: coolblock
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1692457923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1692457922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a760cb8ce8e6f4e9c988e2534d4be9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1692457924
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1692457922}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.5139866, y: -0.41352886, z: 0.00086509204}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1916419743
 GameObject:
   m_ObjectHideFlags: 3
@@ -2013,6 +2057,7 @@ GameObject:
   - component: {fileID: 2126148644}
   - component: {fileID: 2126148643}
   - component: {fileID: 2126148648}
+  - component: {fileID: 2126148649}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2107,7 +2152,6 @@ MonoBehaviour:
   dontDestroyOnLoad: 0
   accelerationValues:
   - 3.141593
-  - 0
   moveSpeed: 3.141593
   sizeMomentum: 3.141593
   jumpForce: 1.047198
@@ -2214,6 +2258,7 @@ TrailRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2314,6 +2359,18 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
+--- !u!114 &2126148649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126148642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c54ffaf7d000f344a714a80218b1e78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2131291006
 GameObject:
   m_ObjectHideFlags: 0
@@ -2485,3 +2542,4 @@ SceneRoots:
   - {fileID: 1032163613}
   - {fileID: 601329749}
   - {fileID: 665180852}
+  - {fileID: 1692457924}
