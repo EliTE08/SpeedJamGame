@@ -6581,13 +6581,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
   accelerationValues:
+  - 0
   - 5
   - 10
   - 15
-  - 20
   moveSpeed: 7
   sizeMomentum: 1
-  jumpForce: 7
+  jumpForce: 1.5
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
