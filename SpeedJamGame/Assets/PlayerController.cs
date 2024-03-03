@@ -238,8 +238,17 @@ public class PlayerController : Singleton<PlayerController>
 
     public void IncreaseTier()
     {
-        _currentTier++;
-        _tierAcceleration = accelerationValues[_currentTier];
+        if (_currentTier == 3) TierForceBoost();
+        else
+        {
+            _currentTier++;
+            _tierAcceleration = accelerationValues[_currentTier];
+        }
+    }
+
+    private void TierForceBoost()
+    {
+        
     }
 
     public int GetCurrentTier()

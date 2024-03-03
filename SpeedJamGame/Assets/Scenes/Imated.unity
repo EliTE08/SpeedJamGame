@@ -3316,7 +3316,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.7924528, g: 0.30071497, b: 0.24296904, a: 1}
+  m_Color: {r: 0.5137255, g: 0.5647059, b: 0.98039216, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -7094,9 +7094,9 @@ MonoBehaviour:
   dontDestroyOnLoad: 0
   accelerationValues:
   - 0
-  - 5
   - 10
   - 15
+  - 20
   moveSpeed: 7
   sizeMomentum: 1
   jumpForce: 1.5
@@ -7269,7 +7269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c54ffaf7d000f344a714a80218b1e78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trailRenderer: {fileID: 0}
+  trailRenderer: {fileID: 2126148648}
 --- !u!1 &2131291006
 GameObject:
   m_ObjectHideFlags: 0
