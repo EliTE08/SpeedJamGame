@@ -51,6 +51,7 @@ public class PlayerController : Singleton<PlayerController>
     private Vector2 _checkpointPosition;
     private List<GameObject> _checkpointsReached = new List<GameObject>();
     private bool _isPerformingSwingJump;
+    private bool _bHopping;
 
     private void Start()
     {
@@ -75,6 +76,7 @@ public class PlayerController : Singleton<PlayerController>
             { 
                 transform.DOScale(Vector3.one, landDuration);
             });
+            _bHopping = false;
             _hasLanded = true;
         }
 
@@ -116,6 +118,18 @@ public class PlayerController : Singleton<PlayerController>
             Slide();
         if (Input.GetKeyUp(KeyCode.LeftShift))
             StopSlide();
+        if (_rb.velocity.x == 0)
+        {
+            _currentTier = 0;
+            _tierAcceleration = accelerationValues[0];
+        }
+
+        if (_bHopping && _horiz == 0 && _rb.velocity.x != 0)
+        {
+            IncreaseTier();
+            print("Tier Increased");
+            _bHopping = false;
+        }
     }
     
     private void MovePlayer()
@@ -124,7 +138,7 @@ public class PlayerController : Singleton<PlayerController>
             return;
         _horiz = Input.GetAxis("Horizontal");
         _vert = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) ? 1 : 0;
-        if (_vert > 0 && _isGrounded)
+        if (_vert > 0)
             Jump();
 
         if (_horiz != 0)
@@ -150,13 +164,22 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Jump()
     {
-        _isGrounded = false;
-        //_rb.velocity = new Vector2(_rb.velocity.x, 1);
-        _rb.AddForce(new Vector2(0, jumpForce * _rb.velocity.x + 2), ForceMode2D.Impulse);
-        transform.DOScale(jumpScale, jumpDuration).OnComplete(() =>
+        if (_isGrounded || _isSwinging)
         {
-            transform.DOScale(Vector3.one, jumpDuration);
-        });
+            _isGrounded = false;
+            //_rb.velocity = new Vector2(_rb.velocity.x, 1);
+            _rb.AddForce(new Vector2(0, jumpForce * _rb.velocity.x + 5), ForceMode2D.Impulse);
+            transform.DOScale(jumpScale, jumpDuration).OnComplete(() =>
+            {
+                transform.DOScale(Vector3.one, jumpDuration);
+            });
+        }
+        else
+        {
+            _bHopping = true;
+            _rb.AddForce(new Vector2(0, -jumpForce * 2 * _rb.velocity.x + 5), ForceMode2D.Impulse);
+            _isGrounded = true;
+        }
     }
 
     private void Accelerate(float direction, float maxSpeed)
