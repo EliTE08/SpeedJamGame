@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
 public class PlayerController : Singleton<PlayerController>
 {
+    public Action<GameObject> onCheckPointHit;
+
     [SerializeField] private List<float> accelerationValues = new List<float>();
     [SerializeField] private float moveSpeed;
     [SerializeField] private float sizeMomentum;
@@ -38,6 +41,7 @@ public class PlayerController : Singleton<PlayerController>
     private Vector3 _playerToAnchor;
     private float _speed;
     private bool _isSwinging;
+    private bool _isSliding;
     private int _currentlyActiveSwingPoint;
     private float _tierAcceleration;
     private float _initialSwingSpeed = 5;
@@ -76,7 +80,8 @@ public class PlayerController : Singleton<PlayerController>
         _canSwing = InRange(targetSwingObjects[_currentlyActiveSwingPoint].transform.position);
         _rb.gravityScale = _isSwinging ? 0f : 1f;
 
-        MovePlayer();
+        if(!_isSliding)
+            MovePlayer();
 
         if (Input.GetButtonDown("Jump") && _canSwing)
             StartSwing();
@@ -113,12 +118,14 @@ public class PlayerController : Singleton<PlayerController>
     {
         _collider.sharedMaterial = icePhysics;
         _rb.sharedMaterial = icePhysics;
+        _isSliding = true;
     }
     
     private void StopSlide()
     {
         _collider.sharedMaterial = normalPhysics;
         _rb.sharedMaterial = normalPhysics;
+        _isSliding = false;
     }
 
     private void Jump()
@@ -147,8 +154,6 @@ public class PlayerController : Singleton<PlayerController>
     
     private void Accelerate(float direction, float maxSpeed)
     {
-        if(!_isGrounded && _rb.velocity.x >= maxSpeed)
-            return;
         var acceleration = (direction * maxSpeed - _rb.velocity.x) / sizeMomentum;
         _rb.velocity += new Vector2(acceleration * Time.deltaTime * 100, 0f);
         _rb.AddForce(new Vector2(direction * _tierAcceleration,0), ForceMode2D.Impulse);
@@ -206,12 +211,20 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Checkpoint"))
+        if (collision.CompareTag("Checkpoint"))
+        {
             _respawnPoint = collision.transform.position;
+            onCheckPointHit?.Invoke(collision.gameObject);
+        }
     }
 
-    public void Respawn()
+    public void Respawn(Vector2 pos)
     {
-        transform.position = _respawnPoint;
+        transform.position = pos;
+    }
+
+    public Transform GetActiveSwingPoint()
+    {
+        return targetSwingObjects[_currentlyActiveSwingPoint].transform;
     }
 }
