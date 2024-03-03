@@ -248,7 +248,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void TierForceBoost(float direction)
     {
-        _rb.AddForce(new Vector2(direction * _tierAcceleration, 0), ForceMode2D.Impulse);
+        _rb.AddForce(new Vector2(direction * _tierAcceleration * 100, 0), ForceMode2D.Force);
     }
 
     public int GetCurrentTier()
