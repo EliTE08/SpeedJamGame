@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class PlayerController : Singleton<PlayerController>
@@ -8,9 +9,10 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private float sizeMomentum;
     [SerializeField] private float jumpForce;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float groundDistance = 0.8f;
     [SerializeField] private PhysicsMaterial2D icePhysics;
     [SerializeField] private PhysicsMaterial2D normalPhysics;
-    
+    [Header("Swinging")]
     [SerializeField] private List<GameObject> targetSwingObjects;
     [SerializeField] private float radius;
     [SerializeField] private float initialSwingSpeed = 5;
@@ -19,6 +21,12 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private float swingHeightDecel;
     [SerializeField] private LineRenderer swingLine;
 
+    [Header("Animations")] 
+    [SerializeField] private Vector3 jumpScale;
+    [SerializeField] private float jumpDuration;
+    [SerializeField] private Vector3 landScale;
+    [SerializeField] private float landDuration;
+
     private Rigidbody2D _rb;
     private SpriteRenderer _spriteRenderer;
     private Collider2D _collider;
@@ -26,6 +34,7 @@ public class PlayerController : Singleton<PlayerController>
     private float _vert;
     private float _horiz;
     private bool _canSwing;
+    private bool _hasLanded;
     private bool _isGrounded;
     private Vector3 _playerToAnchor;
     private float _speed;
@@ -47,7 +56,19 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Update()
     {
-        _isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 0.65f, groundLayer);
+        _isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundDistance, groundLayer);
+        if (!_hasLanded && _isGrounded)
+        {
+            transform.DOScale(landScale, landDuration).OnComplete(() =>
+            { 
+                transform.DOScale(Vector3.one, landDuration);
+            });
+            _hasLanded = true;
+        }
+
+        if (!_isGrounded)
+            _hasLanded = false;
+        
         _canSwing = InRange(targetSwingObjects[_currentlyActiveSwingPoint].transform.position);
         _rb.gravityScale = _isSwinging ? 0f : 1f;
 
@@ -101,6 +122,7 @@ public class PlayerController : Singleton<PlayerController>
         _isGrounded = false;
         _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
         _rb.AddForce(new Vector2(0, jumpForce * _tierAcceleration + 2f), ForceMode2D.Impulse);
+        transform.DOScale(jumpScale, jumpDuration);
     }
     
     private void MovePlayer()
@@ -114,7 +136,7 @@ public class PlayerController : Singleton<PlayerController>
         
         if (_horiz != 0)
         {
-            transform.localScale = new Vector3(_horiz > 0 ? 1 : -1, 1, 1);
+            //transform.localScale = new Vector3(_horiz > 0 ? 1 : -1, 1, 1);
             Accelerate(_horiz, moveSpeed);
         }
     }
@@ -162,6 +184,7 @@ public class PlayerController : Singleton<PlayerController>
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(new Vector3(-999f, targetSwingObjects[_currentlyActiveSwingPoint].transform.position.y), new Vector3(999f, swingHeightDecel));
+        Gizmos.DrawLine(transform.position, transform.position - Vector3.up * groundDistance);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
