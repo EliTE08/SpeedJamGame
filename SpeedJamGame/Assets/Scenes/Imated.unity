@@ -6552,7 +6552,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 2
   m_LinearDrag: 0
   m_AngularDrag: 5
   m_GravityScale: 1
@@ -6585,9 +6585,9 @@ MonoBehaviour:
   - 3
   - 5
   - 8
-  moveSpeed: 3.141593
-  sizeMomentum: 3.141593
-  jumpForce: 2
+  moveSpeed: 7
+  sizeMomentum: 1
+  jumpForce: 5
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -6726,7 +6726,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.34666634
+        value: 0.59667015
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6734,14 +6734,14 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5000153
-        value: 0.51366574
-        inSlope: -1.3488458
-        outSlope: -1.3488458
+        time: 0.40313992
+        value: 0.31494954
+        inSlope: -1.1698047
+        outSlope: -1.1698047
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0.2080015
+        outWeight: 0.5914787
       - serializedVersion: 3
         time: 1
         value: 0.023802042
@@ -6808,6 +6808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c54ffaf7d000f344a714a80218b1e78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trailRenderer: {fileID: 0}
 --- !u!1 &2131291006
 GameObject:
   m_ObjectHideFlags: 0

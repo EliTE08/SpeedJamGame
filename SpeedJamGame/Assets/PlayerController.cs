@@ -134,8 +134,8 @@ public class PlayerController : Singleton<PlayerController>
     private void Jump()
     {
         _isGrounded = false;
-        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
-        _rb.AddForce(new Vector2(0, jumpForce * _tierAcceleration + 2f), ForceMode2D.Impulse);
+        _rb.velocity = new Vector2(_rb.velocity.x, moveSpeed);
+        _rb.AddForce(new Vector2(0, moveSpeed * _tierAcceleration + 2f), ForceMode2D.Impulse);
         transform.DOScale(jumpScale, jumpDuration);
     }
     
