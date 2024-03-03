@@ -43,6 +43,7 @@ public class TrailChange : MonoBehaviour
     {
         trailRenderer.startColor = tierColor[currentTier];
         trailRenderer.endColor = tierColor[currentTier];
+        trailRenderer.time = trailLength[currentTier];
         trailRenderer.widthMultiplier = trailWidth[currentTier];
     }
 }

@@ -67,8 +67,6 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(3))
-            IncreaseTier();
         _isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundDistance, groundLayer);
         if (!_hasLanded && _isGrounded)
         {
@@ -126,7 +124,7 @@ public class PlayerController : Singleton<PlayerController>
 
         if (_bHopping && _rb.velocity.x != 0)
         {
-            IncreaseTier();
+            IncreaseTier(_horiz);
             _bHopping = false;
         }
     }
@@ -186,7 +184,9 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Accelerate(float direction, float maxSpeed)
     {
-        var acceleration = (direction * maxSpeed - _rb.velocity.x) / sizeMomentum;
+        float acceleration;
+        if (_currentTier == 4) acceleration = (direction * maxSpeed - (_rb.velocity.x * 0.8f)) / sizeMomentum;
+        else acceleration = (direction * maxSpeed - _rb.velocity.x) / sizeMomentum;
         _rb.velocity += new Vector2(acceleration * Time.deltaTime * 100, 0f);
         _rb.AddForce(new Vector2(direction * _tierAcceleration + 2,0), ForceMode2D.Impulse);
     }
@@ -219,7 +219,7 @@ public class PlayerController : Singleton<PlayerController>
             _canSwing = false;
             StopSwing();
             Jump();
-            IncreaseTier();
+            IncreaseTier(_horiz);
         }
     }
     
@@ -236,9 +236,9 @@ public class PlayerController : Singleton<PlayerController>
         return (radius >= Vector2.Distance(transform.position, target) || _isSwinging) && !_isPerformingSwingJump;
     }
 
-    public void IncreaseTier()
+    public void IncreaseTier(float direction)
     {
-        if (_currentTier == 4) TierForceBoost();
+        if (_currentTier == 4) TierForceBoost(direction);
         else
         {
             _currentTier++;
@@ -246,9 +246,9 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
-    private void TierForceBoost()
+    private void TierForceBoost(float direction)
     {
-        
+        _rb.AddForce(new Vector2(direction * _tierAcceleration, 0), ForceMode2D.Impulse);
     }
 
     public int GetCurrentTier()
@@ -281,5 +281,6 @@ public class PlayerController : Singleton<PlayerController>
         transform.DOScale(Vector3.one, 0.3f);
         transform.position = _checkpointPosition;
         _rb.velocity = _checkpointVelocity;
+        _currentTier = 0;
     }
 }
