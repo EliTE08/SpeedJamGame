@@ -50,6 +50,7 @@ public class PlayerController : Singleton<PlayerController>
     private Vector2 _checkpointVelocity;
     private Vector2 _checkpointPosition;
     private List<GameObject> _checkpointsReached = new List<GameObject>();
+    private bool _isPerformingSwingJump;
 
     private void Start()
     {
@@ -80,7 +81,7 @@ public class PlayerController : Singleton<PlayerController>
         if (!_isGrounded)
             _hasLanded = false;
         
-        _canSwing = InRange(targetSwingObjects[_currentlyActiveSwingPoint].transform.position);
+        _canSwing = InRange(targetSwingObjects[_currentlyActiveSwingPoint].transform.position) && !_isPerformingSwingJump;
         _rb.gravityScale = _isSwinging ? 0f : 1f;
 
         if(!_isSliding)
@@ -116,6 +117,22 @@ public class PlayerController : Singleton<PlayerController>
         if (Input.GetKeyUp(KeyCode.LeftShift))
             StopSlide();
     }
+    
+    private void MovePlayer()
+    {
+        if(_isSwinging)
+            return;
+        _horiz = Input.GetAxis("Horizontal");
+        _vert = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) ? 1 : 0;
+        if (_vert > 0 && _isGrounded)
+            Jump();
+
+        if (_horiz != 0)
+        {
+            //transform.localScale = new Vector3(_horiz > 0 ? 1 : -1, 1, 1);
+            Accelerate(_horiz, moveSpeed);
+        }
+    }
 
     private void Slide()
     {
@@ -141,23 +158,7 @@ public class PlayerController : Singleton<PlayerController>
             transform.DOScale(Vector3.one, jumpDuration);
         });
     }
-    
-    private void MovePlayer()
-    {
-        if(_isSwinging)
-            return;
-        _horiz = Input.GetAxis("Horizontal");
-        _vert = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) ? 1 : 0;
-        if (_vert > 0 && _isGrounded)
-            Jump();
-        
-        if (_horiz != 0)
-        {
-            //transform.localScale = new Vector3(_horiz > 0 ? 1 : -1, 1, 1);
-            Accelerate(_horiz, moveSpeed);
-        }
-    }
-    
+
     private void Accelerate(float direction, float maxSpeed)
     {
         var acceleration = (direction * maxSpeed - _rb.velocity.x) / sizeMomentum;
@@ -169,11 +170,11 @@ public class PlayerController : Singleton<PlayerController>
     {
         _initialSwingSpeed = Mathf.Max(minSwingSpeed, swingPercentage / 100 * _rb.velocity.x);
         _swingSpeedDecel = _initialSwingSpeed / 5f;
+        _isSwinging = true;
     }
     
     private void Swing()
     {
-        _isSwinging = true;
         var toAnchor = (Vector2)targetSwingObjects[_currentlyActiveSwingPoint].transform.position - _rb.position;
         var onRadius = toAnchor.normalized * radius;
         var tangent = new Vector2(onRadius.y, -onRadius.x).normalized;
@@ -185,6 +186,14 @@ public class PlayerController : Singleton<PlayerController>
         swingLine.enabled = true;
         swingLine.SetPosition(0, transform.position);
         swingLine.SetPosition(1, targetSwingObjects[_currentlyActiveSwingPoint].transform.position);
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        {
+            _isPerformingSwingJump = true;
+            _canSwing = false;
+            StopSwing();
+            Jump();
+            IncreaseTier();
+        }
     }
     
     private void StopSwing()
@@ -192,10 +201,12 @@ public class PlayerController : Singleton<PlayerController>
         _isSwinging = false;
         swingLine.enabled = false;
     }
-    
+
     private bool InRange(Vector2 target)
     {
-        return radius >= Vector2.Distance(transform.position, target) || _isSwinging;
+        if(radius < Vector2.Distance(transform.position, target))
+            _isPerformingSwingJump = false;
+        return (radius >= Vector2.Distance(transform.position, target) || _isSwinging) && !_isPerformingSwingJump;
     }
 
     public void IncreaseTier()
@@ -233,10 +244,5 @@ public class PlayerController : Singleton<PlayerController>
         transform.DOScale(Vector3.one, 0.3f);
         transform.position = _checkpointPosition;
         _rb.velocity = _checkpointVelocity;
-    }
-
-    public Transform GetActiveSwingPoint()
-    {
-        return targetSwingObjects[_currentlyActiveSwingPoint].transform;
     }
 }
