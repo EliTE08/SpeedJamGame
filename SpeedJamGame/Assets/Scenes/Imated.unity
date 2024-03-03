@@ -2013,6 +2013,7 @@ GameObject:
   - component: {fileID: 2126148644}
   - component: {fileID: 2126148643}
   - component: {fileID: 2126148648}
+  - component: {fileID: 2126148649}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2107,7 +2108,9 @@ MonoBehaviour:
   dontDestroyOnLoad: 0
   accelerationValues:
   - 1
-  - 3.141593
+  - 2
+  - 3
+  - 5
   moveSpeed: 3.141593
   sizeMomentum: 3.141593
   jumpForce: 2
@@ -2318,6 +2321,18 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
+--- !u!114 &2126148649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126148642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c54ffaf7d000f344a714a80218b1e78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2131291006
 GameObject:
   m_ObjectHideFlags: 0

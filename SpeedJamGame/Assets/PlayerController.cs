@@ -42,6 +42,7 @@ public class PlayerController : Singleton<PlayerController>
     private float _tierAcceleration;
     private float _initialSwingSpeed = 5;
     private float _swingSpeedDecel = 2.5f;
+    private int _currentTier;
 
     private void Start()
     {
@@ -52,11 +53,13 @@ public class PlayerController : Singleton<PlayerController>
         _canSwing = true;
         _isGrounded = true;
         _speed = moveSpeed;
-        _tierAcceleration = accelerationValues[0];
+        _tierAcceleration = accelerationValues[_currentTier];
     }
 
     private void Update()
     {
+        if(Input.GetMouseButtonDown(5))
+            IncreaseTier();
         _isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundDistance, groundLayer);
         if (!_hasLanded && _isGrounded)
         {
@@ -180,6 +183,17 @@ public class PlayerController : Singleton<PlayerController>
     private bool InRange(Vector2 target)
     {
         return radius >= Vector2.Distance(transform.position, target) || _isSwinging;
+    }
+
+    public void IncreaseTier()
+    {
+        _currentTier++;
+        _tierAcceleration = accelerationValues[_currentTier];
+    }
+
+    public int GetCurrentTier()
+    {
+        return _currentTier;
     }
 
     private void OnDrawGizmos()
