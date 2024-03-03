@@ -58,7 +58,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(5))
+        if(Input.GetMouseButtonDown(3))
             IncreaseTier();
         _isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundDistance, groundLayer);
         if (!_hasLanded && _isGrounded)
