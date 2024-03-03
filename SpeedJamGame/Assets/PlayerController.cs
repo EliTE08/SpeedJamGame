@@ -127,7 +127,6 @@ public class PlayerController : Singleton<PlayerController>
         if (_bHopping && _rb.velocity.x != 0)
         {
             IncreaseTier();
-            print("Tier Increased");
             _bHopping = false;
         }
     }
@@ -171,7 +170,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         _isGrounded = false;
         //_rb.velocity = new Vector2(_rb.velocity.x, 1);
-        _rb.AddForce(new Vector2(0, jumpForce * _rb.velocity.x + 5), ForceMode2D.Impulse);
+        _rb.AddForce(new Vector2(0, jumpForce * _rb.velocity.x + 8), ForceMode2D.Impulse);
         transform.DOScale(jumpScale, jumpDuration).OnComplete(() => 
         {
             transform.DOScale(Vector3.one, jumpDuration); 
@@ -181,7 +180,7 @@ public class PlayerController : Singleton<PlayerController>
     private void JumpDown()
     {
         _bHopping = true;
-        _rb.AddForce(new Vector2(0, -jumpForce * 2 * _rb.velocity.x + 5), ForceMode2D.Impulse);
+        _rb.AddForce(new Vector2(0, -jumpForce * 2 * _rb.velocity.x - 8), ForceMode2D.Impulse);
         _isGrounded = true;
     }
 
