@@ -203,7 +203,9 @@ public class PlayerController : Singleton<PlayerController>
         var toAnchor = (Vector2)targetSwingObjects[_currentlyActiveSwingPoint].transform.position - _rb.position;
         var onRadius = toAnchor.normalized * radius;
         var tangent = new Vector2(onRadius.y, -onRadius.x).normalized;
-        _rb.velocity = tangent * (_initialSwingSpeed + 0.1f);
+        var desiredVelocity = tangent * (_initialSwingSpeed + 0.1f);
+        var velocityChange = desiredVelocity - _rb.velocity;
+        _rb.AddForce(velocityChange * _rb.mass, ForceMode2D.Impulse);
         if(transform.position.x <= targetSwingObjects[_currentlyActiveSwingPoint].transform.position.x) // Left
             _initialSwingSpeed += _swingSpeedDecel / 100 * Mathf.Abs(_speed);
         else
