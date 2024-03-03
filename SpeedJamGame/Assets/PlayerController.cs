@@ -138,8 +138,13 @@ public class PlayerController : Singleton<PlayerController>
             return;
         _horiz = Input.GetAxis("Horizontal");
         _vert = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) ? 1 : 0;
-        if (_vert > 0)
+        if (_vert > 0 && _isGrounded)
             Jump();
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if(_rb.velocity.y >= 0)
+                JumpDown();
+        }
 
         if (_horiz != 0)
         {
@@ -164,22 +169,20 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Jump()
     {
-        if (_isGrounded || _isSwinging)
+        _isGrounded = false;
+        //_rb.velocity = new Vector2(_rb.velocity.x, 1);
+        _rb.AddForce(new Vector2(0, jumpForce * _rb.velocity.x + 5), ForceMode2D.Impulse);
+        transform.DOScale(jumpScale, jumpDuration).OnComplete(() => 
         {
-            _isGrounded = false;
-            //_rb.velocity = new Vector2(_rb.velocity.x, 1);
-            _rb.AddForce(new Vector2(0, jumpForce * _rb.velocity.x + 5), ForceMode2D.Impulse);
-            transform.DOScale(jumpScale, jumpDuration).OnComplete(() =>
-            {
-                transform.DOScale(Vector3.one, jumpDuration);
-            });
-        }
-        else
-        {
-            _bHopping = true;
-            _rb.AddForce(new Vector2(0, -jumpForce * 2 * _rb.velocity.x + 5), ForceMode2D.Impulse);
-            _isGrounded = true;
-        }
+            transform.DOScale(Vector3.one, jumpDuration); 
+        });
+    }
+
+    private void JumpDown()
+    {
+        _bHopping = true;
+        _rb.AddForce(new Vector2(0, -jumpForce * 2 * _rb.velocity.x + 5), ForceMode2D.Impulse);
+        _isGrounded = true;
     }
 
     private void Accelerate(float direction, float maxSpeed)
@@ -263,6 +266,7 @@ public class PlayerController : Singleton<PlayerController>
 
     public void Respawn()
     {
+        _bHopping = false;
         transform.DOScale(Vector3.zero, 0f);
         transform.DOScale(Vector3.one, 0.3f);
         transform.position = _checkpointPosition;
