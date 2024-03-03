@@ -12,9 +12,7 @@ public class SpikeScript : MonoBehaviour
 
             //Make it call respawn animation too (Fast animation)
 
-            //PlayerController.Instance.Invoke("Respawn", 1f);
-            
-            PlayerGhost.Instance.PlayRecorded();
+            PlayerController.Instance.Respawn();
         }
     }
 

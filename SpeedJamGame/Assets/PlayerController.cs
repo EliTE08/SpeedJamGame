@@ -47,6 +47,9 @@ public class PlayerController : Singleton<PlayerController>
     private float _initialSwingSpeed = 5;
     private float _swingSpeedDecel = 2.5f;
     private int _currentTier;
+    private Vector2 _checkpointVelocity;
+    private Vector2 _checkpointPosition;
+    private List<GameObject> _checkpointsReached = new List<GameObject>();
 
     private void Start()
     {
@@ -211,16 +214,22 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Checkpoint"))
+        if (collision.CompareTag("Checkpoint") && !_checkpointsReached.Contains(collision.gameObject))
         {
+            _checkpointsReached.Add(collision.gameObject);
             _respawnPoint = collision.transform.position;
+            _checkpointVelocity = _rb.velocity;
+            _checkpointPosition = transform.position;
             onCheckPointHit?.Invoke(collision.gameObject);
         }
     }
 
-    public void Respawn(Vector2 pos)
+    public void Respawn()
     {
-        transform.position = pos;
+        transform.DOScale(Vector3.zero, 0f);
+        transform.DOScale(Vector3.one, 0.3f);
+        transform.position = _checkpointPosition;
+        _rb.velocity = _checkpointVelocity;
     }
 
     public Transform GetActiveSwingPoint()
