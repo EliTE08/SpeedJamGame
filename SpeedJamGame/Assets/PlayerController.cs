@@ -238,7 +238,7 @@ public class PlayerController : Singleton<PlayerController>
 
     public void IncreaseTier()
     {
-        if (_currentTier == 3) TierForceBoost();
+        if (_currentTier == 4) TierForceBoost();
         else
         {
             _currentTier++;
