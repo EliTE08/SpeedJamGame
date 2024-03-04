@@ -8,13 +8,13 @@ public class LootLockerManager : Singleton<LootLockerManager>
 {
     public const int LeaderboardID = 20886;
     public TMP_InputField nameInput;
-    
-    private void Start()
+
+    public void StartLogin()
     {
         StartCoroutine(LoginRoutine());
     }
-
-    private IEnumerator LoginRoutine()
+    
+    public IEnumerator LoginRoutine()
     {
         var done = false;
         LootLockerSDKManager.StartGuestSession((response) =>

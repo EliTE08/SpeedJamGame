@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InputUser : MonoBehaviour
 {
-    public InputField inputField;
+    public TMP_InputField inputField;
 
     private void Start()
     {
@@ -15,7 +16,6 @@ public class InputUser : MonoBehaviour
 
     private void OnEndEdit(string userInput)
     {
-        
-        Debug.Log("Username entered: " + userInput);
+        LootLockerManager.Instance.StartLogin();
     }
 }
