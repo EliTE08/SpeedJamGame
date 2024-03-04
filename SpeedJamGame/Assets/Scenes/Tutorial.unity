@@ -702,8 +702,9 @@ MonoBehaviour:
   m_text: '<b>Welcome to The Flow Zone! </b>
 
 
-    The game where you must go supersonic
-    to overcome difficult obstacles and compete with other racers around the world.'
+    The ultimate game show where you
+    must go supersonic and overcome tons of difficult obstacles to compete with other
+    racers around the world and win the ultimate prize.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: afab5ebeb5019dd4ebb5bf4265c3cac2, type: 2}
   m_sharedMaterial: {fileID: 6805986926699325598, guid: afab5ebeb5019dd4ebb5bf4265c3cac2, type: 2}
