@@ -7,7 +7,10 @@ public class TutorialEnd : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.CompareTag("Player"))
+        if (col.CompareTag("Player"))
+        {
+            Destroy(col.gameObject);
             TransitionCanvas.Instance.Transition(mainSceneName);
+        }
     }
 }

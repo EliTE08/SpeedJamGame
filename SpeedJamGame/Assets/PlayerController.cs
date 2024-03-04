@@ -18,6 +18,7 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private PhysicsMaterial2D normalPhysics;
     [SerializeField] private ParticleSystem dashLines;
     [SerializeField] private Transform levelStart;
+    [SerializeField] private TimerScript timer;
     [SerializeField] private int maxTierProgress = 3;
     [Header("Swinging")]
     [SerializeField] private List<GameObject> targetSwingObjects;
@@ -60,6 +61,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Start()
     {
+        timer = GameObject.Find("Canvas").GetComponent<TimerScript>();
         Application.targetFrameRate = 60;
         audioManager = GetComponent<AudioManager>();
         _rb = GetComponent<Rigidbody2D>();
@@ -335,6 +337,7 @@ public class PlayerController : Singleton<PlayerController>
             _checkpointPosition = levelStart.position;
             _checkpointTier = _currentTier;
             _checkpointTierProgress = _currentTierProgress;
+            Win();
         }
     }
 
@@ -356,6 +359,8 @@ public class PlayerController : Singleton<PlayerController>
     }
     public void Win()
     {
-
+        timer.StopTimer();
+        timer.gameObject.transform.Translate(new Vector2(0,500));
+        Destroy(gameObject);
     }
 }
