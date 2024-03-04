@@ -81,6 +81,7 @@ public class PlayerController : Singleton<PlayerController>
             });
             _bHopping = false;
             _hasLanded = true;
+            audioManager.Play("Swing");
         }
 
         if (!_isGrounded)

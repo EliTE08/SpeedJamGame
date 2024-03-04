@@ -24223,7 +24223,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Swing
     clip: {fileID: 8300000, guid: e6cd934c982056f4a987574658b143d1, type: 3}
-    volume: 1
+    volume: 0.8
     pitch: 1
     loop: 0
     source: {fileID: 0}
