@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class PlayerController : Singleton<PlayerController>
 {
     public Action<GameObject> onCheckPointHit;
-
+    [SerializeField] private AudioManager audioManager;
     [SerializeField] private List<float> accelerationValues = new List<float>();
     [SerializeField] private float moveSpeed;
     [SerializeField] private float sizeMomentum;
@@ -60,7 +61,7 @@ public class PlayerController : Singleton<PlayerController>
     private void Start()
     {
         Application.targetFrameRate = 60;
-        
+        audioManager = GetComponent<AudioManager>();
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();
         _canSwing = true;
@@ -184,6 +185,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             transform.DOScale(Vector3.one, jumpDuration); 
         });
+        audioManager.Play("Jump");
     }
 
     private void JumpDown()
@@ -191,6 +193,7 @@ public class PlayerController : Singleton<PlayerController>
         _bHopping = true;
         _rb.AddForce(new Vector2(0, -jumpForce * 2 * _rb.velocity.x - 8), ForceMode2D.Impulse);
         _isGrounded = true;
+        audioManager.Play("Combo");
     }
 
     private void Accelerate(float direction, float maxSpeed)
@@ -209,6 +212,7 @@ public class PlayerController : Singleton<PlayerController>
         _initialSwingSpeed = Mathf.Max(minSwingSpeed, swingPercentage / 100 * _rb.velocity.x);
         _swingSpeedDecel = _initialSwingSpeed / 5f;
         _isSwinging = true;
+        audioManager.Play("Swing");
     }
     
     private void Swing()
@@ -282,6 +286,7 @@ public class PlayerController : Singleton<PlayerController>
                         _tierAcceleration = value;
                     });
             }
+            
         }
     }
 
