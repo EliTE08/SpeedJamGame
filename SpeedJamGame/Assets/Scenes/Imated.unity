@@ -275,6 +275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 2124890483}
   t: 0
+  stop: 0
 --- !u!1 &182211524
 GameObject:
   m_ObjectHideFlags: 0
@@ -17287,7 +17288,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: JAM
     clip: {fileID: 8300000, guid: 248e732e0777ee94e84db12563273655, type: 3}
-    volume: 1
+    volume: 0.503
     pitch: 1
     loop: 1
     source: {fileID: 0}
