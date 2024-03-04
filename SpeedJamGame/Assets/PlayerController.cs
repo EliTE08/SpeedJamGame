@@ -17,6 +17,7 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private PhysicsMaterial2D normalPhysics;
     [SerializeField] private ParticleSystem dashLines;
     [SerializeField] private Transform levelStart;
+    [SerializeField] private int maxTierProgress = 3;
     [Header("Swinging")]
     [SerializeField] private List<GameObject> targetSwingObjects;
     [SerializeField] private float radius;
@@ -46,9 +47,11 @@ public class PlayerController : Singleton<PlayerController>
     private float _initialSwingSpeed = 5;
     private float _swingSpeedDecel = 2.5f;
     private int _currentTier;
+    private int _currentTierProgress;
     private Vector2 _checkpointVelocity;
     private Vector2 _checkpointPosition;
     private int _checkpointTier;
+    private int _checkpointTierProgress;
     private List<GameObject> _checkpointsReached = new List<GameObject>();
     private bool _isPerformingSwingJump;
     private bool _bHopping;
@@ -259,11 +262,26 @@ public class PlayerController : Singleton<PlayerController>
                 if(dashLines.isPlaying)
                     dashLines.Stop();
             }
-            _currentTier++;
-            DOVirtual.Float(_tierAcceleration, accelerationValues[_currentTier], 4f, value =>
+
+            _currentTierProgress++;
+            if (_currentTierProgress == maxTierProgress)
             {
-                _tierAcceleration = value;
-            });
+                _currentTierProgress = 0;
+                _currentTier++;
+                DOVirtual.Float(_tierAcceleration, accelerationValues[_currentTier], 4f,
+                    value =>
+                    {
+                        _tierAcceleration = value;
+                    });
+            }
+            else
+            {
+                DOVirtual.Float(_tierAcceleration,  1 / _currentTierProgress * accelerationValues[_currentTier], 4f,
+                    value =>
+                    {
+                        _tierAcceleration = value;
+                    });
+            }
         }
     }
 
@@ -310,19 +328,25 @@ public class PlayerController : Singleton<PlayerController>
             _checkpointVelocity = _rb.velocity;
             _checkpointPosition = levelStart.position;
             _checkpointTier = _currentTier;
-            Respawn();
+            _checkpointTierProgress = _currentTierProgress;
+            Respawn(true);
         }
     }
 
-    public void Respawn()
+    public void Respawn(bool loop = false)
     {
         _bHopping = false;
-        transform.DOScale(Vector3.zero, 0f);
-        transform.DOScale(Vector3.one, 0.3f);
+        if (!loop)
+        {
+            transform.DOScale(Vector3.zero, 0f);
+            transform.DOScale(Vector3.one, 0.3f);
+        }
         transform.position = _checkpointPosition;
         _rb.velocity = _checkpointVelocity;
         _currentTier = _checkpointTier;
+        _currentTierProgress = _checkpointTierProgress;
         _tierAcceleration = accelerationValues[_currentTier];
-        GetComponent<TrailRenderer>().Clear();
+        if (!loop)
+            GetComponent<TrailRenderer>().Clear();
     }
 }
