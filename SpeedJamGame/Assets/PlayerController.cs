@@ -335,7 +335,6 @@ public class PlayerController : Singleton<PlayerController>
             _checkpointPosition = levelStart.position;
             _checkpointTier = _currentTier;
             _checkpointTierProgress = _currentTierProgress;
-            Respawn(true);
         }
     }
 
@@ -354,5 +353,9 @@ public class PlayerController : Singleton<PlayerController>
         _tierAcceleration = accelerationValues[_currentTier];
         if (!loop)
             GetComponent<TrailRenderer>().Clear();
+    }
+    public void Win()
+    {
+
     }
 }
