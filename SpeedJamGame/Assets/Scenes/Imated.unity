@@ -13090,7 +13090,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
-  audioManager: {fileID: 0}
+  audioManager: {fileID: 2126148651}
   accelerationValues:
   - 0
   - 10

@@ -23923,6 +23923,7 @@ GameObject:
   - component: {fileID: 2126148643}
   - component: {fileID: 2126148648}
   - component: {fileID: 2126148649}
+  - component: {fileID: 2126148650}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -24015,6 +24016,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
+  audioManager: {fileID: 0}
   accelerationValues:
   - 0
   - 10
@@ -24195,6 +24197,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trailRenderer: {fileID: 2126148648}
+--- !u!114 &2126148650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126148642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d7571f7329133946aa461c104769c68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Jump
+    clip: {fileID: 8300000, guid: c21df5add6e94214e964e07e1c9da460, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Combo
+    clip: {fileID: 8300000, guid: d42ab0dbc4372e549b7f54cb2161bc7e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Swing
+    clip: {fileID: 8300000, guid: e6cd934c982056f4a987574658b143d1, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
 --- !u!1 &2145407458
 GameObject:
   m_ObjectHideFlags: 0
