@@ -15,6 +15,8 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private float groundDistance = 0.8f;
     [SerializeField] private PhysicsMaterial2D icePhysics;
     [SerializeField] private PhysicsMaterial2D normalPhysics;
+    [SerializeField] private ParticleSystem dashLines;
+    [SerializeField] private Transform levelStart;
     [Header("Swinging")]
     [SerializeField] private List<GameObject> targetSwingObjects;
     [SerializeField] private float radius;
@@ -30,15 +32,12 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private float landDuration;
 
     private Rigidbody2D _rb;
-    private SpriteRenderer _spriteRenderer;
     private Collider2D _collider;
-    private Vector2 _respawnPoint;
     private float _vert;
     private float _horiz;
     private bool _canSwing;
     private bool _hasLanded;
     private bool _isGrounded;
-    private Vector3 _playerToAnchor;
     private float _speed;
     private bool _isSwinging;
     private bool _isSliding;
@@ -49,9 +48,11 @@ public class PlayerController : Singleton<PlayerController>
     private int _currentTier;
     private Vector2 _checkpointVelocity;
     private Vector2 _checkpointPosition;
+    private int _checkpointTier;
     private List<GameObject> _checkpointsReached = new List<GameObject>();
     private bool _isPerformingSwingJump;
     private bool _bHopping;
+    private float _previousMoveDirection;
 
     private void Start()
     {
@@ -90,11 +91,11 @@ public class PlayerController : Singleton<PlayerController>
         if (Input.GetButtonDown("Jump") && _canSwing)
             StartSwing();
         
-        if (Input.GetButton("Jump") && _canSwing)
+        if (Input.GetButton("Jump"))
         {
             if (!_isSwinging)
             {
-                if(transform.position.x <= targetSwingObjects[_currentlyActiveSwingPoint].transform.position.x)
+                if(transform.position.x <= targetSwingObjects[_currentlyActiveSwingPoint].transform.position.x && _canSwing)
                     Swing();
             }
             else
@@ -134,6 +135,13 @@ public class PlayerController : Singleton<PlayerController>
         if(_isSwinging)
             return;
         _horiz = Input.GetAxis("Horizontal");
+        if (_previousMoveDirection != Input.GetAxisRaw("Horizontal"))
+        {
+            if(Input.GetAxisRaw("Horizontal") != 0)
+                DecreaseTier();
+            _previousMoveDirection = Input.GetAxisRaw("Horizontal");
+        }
+
         _vert = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) ? 1 : 0;
         if (_vert > 0 && _isGrounded)
             Jump();
@@ -185,8 +193,10 @@ public class PlayerController : Singleton<PlayerController>
     private void Accelerate(float direction, float maxSpeed)
     {
         float acceleration;
-        if (_currentTier == 4) acceleration = (direction * maxSpeed - (_rb.velocity.x * 0.8f)) / sizeMomentum;
-        else acceleration = (direction * maxSpeed - _rb.velocity.x) / sizeMomentum;
+        if (_currentTier == 4) 
+            acceleration = (direction * maxSpeed - (_rb.velocity.x * 0.8f)) / sizeMomentum;
+        else 
+            acceleration = (direction * maxSpeed - _rb.velocity.x) / sizeMomentum;
         _rb.velocity += new Vector2(acceleration * Time.deltaTime * 100, 0f);
         _rb.AddForce(new Vector2(direction * _tierAcceleration + 2,0), ForceMode2D.Impulse);
     }
@@ -238,12 +248,33 @@ public class PlayerController : Singleton<PlayerController>
 
     public void IncreaseTier(float direction)
     {
-        if (_currentTier == 4) TierForceBoost(direction);
+        if (_currentTier == 4)
+            TierForceBoost(direction);
         else
         {
+            if(_currentTier + 1 == 4)
+                dashLines.Play();
+            else
+            {
+                if(dashLines.isPlaying)
+                    dashLines.Stop();
+            }
             _currentTier++;
-            _tierAcceleration = accelerationValues[_currentTier];
+            DOVirtual.Float(_tierAcceleration, accelerationValues[_currentTier], 4f, value =>
+            {
+                _tierAcceleration = value;
+            });
         }
+    }
+
+    public void DecreaseTier()
+    {
+        if(_currentTier == 0)
+            return;
+        if(dashLines.isPlaying)
+            dashLines.Stop();
+        _currentTier--;
+        _tierAcceleration = accelerationValues[_currentTier];
     }
 
     private void TierForceBoost(float direction)
@@ -267,10 +298,19 @@ public class PlayerController : Singleton<PlayerController>
         if (collision.CompareTag("Checkpoint") && !_checkpointsReached.Contains(collision.gameObject))
         {
             _checkpointsReached.Add(collision.gameObject);
-            _respawnPoint = collision.transform.position;
             _checkpointVelocity = _rb.velocity;
             _checkpointPosition = transform.position;
+            _checkpointTier = _currentTier;
             onCheckPointHit?.Invoke(collision.gameObject);
+        }
+
+        if (collision.CompareTag("Level End"))
+        {
+            _checkpointsReached.Clear();
+            _checkpointVelocity = _rb.velocity;
+            _checkpointPosition = levelStart.position;
+            _checkpointTier = _currentTier;
+            Respawn();
         }
     }
 
@@ -281,6 +321,8 @@ public class PlayerController : Singleton<PlayerController>
         transform.DOScale(Vector3.one, 0.3f);
         transform.position = _checkpointPosition;
         _rb.velocity = _checkpointVelocity;
-        _currentTier = 0;
+        _currentTier = _checkpointTier;
+        _tierAcceleration = accelerationValues[_currentTier];
+        GetComponent<TrailRenderer>().Clear();
     }
 }

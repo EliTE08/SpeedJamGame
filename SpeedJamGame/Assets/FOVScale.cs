@@ -8,8 +8,8 @@ public class FOVScale : MonoBehaviour
 
     public Rigidbody2D playerRigidbody;
     public CinemachineVirtualCamera virtualcamera;
-    private float minOrthoSize = 5f;
-    private float maxOrthoSize = 10f;
+    private float minOrthoSize = 6f;
+    private float maxOrthoSize = 15f;
     private float scaleSpeed = 1f;
     
     private void Update()

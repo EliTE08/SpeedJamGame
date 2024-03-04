@@ -7,7 +7,7 @@ public class TrailChange : MonoBehaviour
     public TrailRenderer trailRenderer;
     private int currentTier = 0;
     private Color[] tierColor = {new Color(), new Color(51f / 255f, 241f / 255f, 241f / 255f), new Color(244f / 255f, 211f / 255f, 94f / 255f), new Color(219f / 255f, 80f / 255f, 74f / 255f), new Color(255f / 255f, 255f / 255f, 255f / 255f) };
-    private float[] trailWidth = {0, 0.4f, 0.7f, 1.1f, 1.5f};
+    private float[] trailWidth = {0, 0.4f, 0.7f, 1.1f, 1.3f};
     private float[] trailLength = {0, 0.4f, 0.7f, 1.1f, 1.5f};
 
     void Start()
@@ -42,7 +42,7 @@ public class TrailChange : MonoBehaviour
     private void UpdateTrailColorAndWidth()
     {
         trailRenderer.startColor = tierColor[currentTier];
-        trailRenderer.endColor = tierColor[currentTier];
+        trailRenderer.endColor = tierColor[currentTier - 1];
         trailRenderer.time = trailLength[currentTier];
         trailRenderer.widthMultiplier = trailWidth[currentTier];
     }
