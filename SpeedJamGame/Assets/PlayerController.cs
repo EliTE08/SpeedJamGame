@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerController : Singleton<PlayerController>
@@ -72,6 +73,7 @@ public class PlayerController : Singleton<PlayerController>
         _isGrounded = true;
         _speed = moveSpeed;
         _tierAcceleration = accelerationValues[_currentTier];
+        audioManager.Play("JAM");
     }
 
     private void Update()
@@ -373,6 +375,9 @@ public class PlayerController : Singleton<PlayerController>
 
         }
         Debug.Log(timer.t);
-        Destroy(gameObject);
+    }
+    public void ToMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }

@@ -10,14 +10,16 @@ public class TimerScript : MonoBehaviour
     private float startTime;
     private bool timerActive;
     public float t;
+    public bool stop;
     void Start()
     {
         timerActive = false;
+        stop = false;
     }
 
     void Update()
     {
-        if (!timerActive && Input.anyKeyDown)
+        if (!timerActive && Input.anyKeyDown && !stop)
         {
             StartTimerWithInput();
         }
@@ -46,5 +48,6 @@ public class TimerScript : MonoBehaviour
     public void StopTimer()
     {
         timerActive = false;
+        stop = true;
     }
 }
