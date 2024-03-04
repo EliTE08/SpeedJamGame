@@ -368,7 +368,6 @@ public class PlayerController : Singleton<PlayerController>
         try
         {
             LootLockerManager.Instance.SubmitScore(Convert.ToInt32(timer.t * 1000));
-
         }
         catch
         {
