@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerController : Singleton<PlayerController>
 {
     public Action<GameObject> onCheckPointHit;
     [SerializeField] private AudioManager audioManager;
+    [SerializeField] private GameObject winUi;
     [SerializeField] private List<float> accelerationValues = new List<float>();
     [SerializeField] private float moveSpeed;
     [SerializeField] private float sizeMomentum;
@@ -332,12 +334,12 @@ public class PlayerController : Singleton<PlayerController>
 
         if (collision.CompareTag("Level End"))
         {
+            Win();
             _checkpointsReached.Clear();
             _checkpointVelocity = _rb.velocity;
             _checkpointPosition = levelStart.position;
             _checkpointTier = _currentTier;
             _checkpointTierProgress = _currentTierProgress;
-            Win();
         }
     }
 
@@ -360,7 +362,17 @@ public class PlayerController : Singleton<PlayerController>
     public void Win()
     {
         timer.StopTimer();
-        timer.gameObject.transform.Translate(new Vector2(0,500));
+        winUi.SetActive(true);
+        try
+        {
+            LootLockerManager.Instance.SubmitScore(Convert.ToInt32(timer.t * 1000));
+
+        }
+        catch
+        {
+
+        }
+        Debug.Log(timer.t);
         Destroy(gameObject);
     }
 }

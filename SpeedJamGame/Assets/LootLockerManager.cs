@@ -50,7 +50,7 @@ public class LootLockerManager : Singleton<LootLockerManager>
             if (response.statusCode == 200) 
             {
                 Debug.Log("Successful");
-                if (scoreToUpload > response.score || response.score == 0)
+                if (scoreToUpload < response.score || response.score == 0)
                 {
                     print($"Score: {scoreToUpload}, PlayerID: {playerID}");
                     LootLockerSDKManager.SubmitScore(playerID, scoreToUpload, LeaderboardID.ToString(), (scoreResponse) =>

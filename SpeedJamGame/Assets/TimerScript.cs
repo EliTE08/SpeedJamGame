@@ -9,7 +9,7 @@ public class TimerScript : MonoBehaviour
     public TMP_Text timerText;
     private float startTime;
     private bool timerActive;
-
+    public float t;
     void Start()
     {
         timerActive = false;
@@ -24,7 +24,7 @@ public class TimerScript : MonoBehaviour
 
         if (timerActive)
         {
-            float t = Time.time - startTime;
+            t = Time.time - startTime;
 
             string minutes = Mathf.Floor(t / 60).ToString("00");
             string seconds = Mathf.Floor(t % 60).ToString("00");
